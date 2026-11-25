@@ -1,0 +1,438 @@
+{
+  "bundleid": "com.kaushikgopal.alfred.imagetools.ui",
+  "log": {
+    "level": "info",
+    "internal": true
+  },
+  "variablesconfig": {
+    "selected_files": {
+      "src": "args",
+      "scriptenv": true
+    },
+    "target_format": {
+      "default": "webp",
+      "persist": true,
+      "scriptenv": true
+    },
+    "quality": {
+      "default": "86",
+      "persist": true,
+      "scriptenv": true
+    },
+    "lossless": {
+      "default": "0",
+      "persist": true,
+      "scriptenv": true
+    },
+    "keep_exif": {
+      "default": "1",
+      "persist": true,
+      "scriptenv": true
+    }
+  },
+  "window": {
+    "title": "Convert / Optimize Images",
+    "movablebybackground": true,
+    "size": {
+      "width": 760,
+      "height": 480
+    },
+    "padding": 14,
+    "root": {
+      "type": "view",
+      "layout": "border",
+      "spacing": 10,
+      "events": [
+        {
+          "triggers": "preload",
+          "action": {
+            "type": "script",
+            "src": "./scripts/bridge.sh",
+            "flattenarrayargs": true,
+            "args": [
+              "init",
+              "{var:target_format}",
+              "{var:quality}",
+              "{var:lossless}",
+              "{var:keep_exif}",
+              "{var:selected_files}"
+            ]
+          }
+        }
+      ],
+      "shortcuts": [
+        {
+          "shortcut": "⌘P",
+          "action": {
+            "type": "script",
+            "src": "./scripts/bridge.sh",
+            "async": true,
+            "flattenarrayargs": true,
+            "args": [
+              "measure",
+              "{value:format_picker.selected.value}",
+              "{value:quality_field.text}",
+              "{value:lossless_check.checked}",
+              "{value:exif_check.checked}",
+              "{var:selected_files}"
+            ]
+          }
+        },
+        {
+          "shortcut": "⌘↩",
+          "action": {
+            "type": "script",
+            "src": "./scripts/bridge.sh",
+            "async": true,
+            "flattenarrayargs": true,
+            "args": [
+              "convert",
+              "{value:format_picker.selected.value}",
+              "{value:quality_field.text}",
+              "{value:lossless_check.checked}",
+              "{value:exif_check.checked}",
+              "{var:selected_files}"
+            ]
+          }
+        }
+      ],
+      "components": [
+        {
+          "constraints": {
+            "region": "top"
+          },
+          "type": "view",
+          "layout": "inline",
+          "direction": "vertical",
+          "spacing": 4,
+          "components": [
+            {
+              "id": "header_label",
+              "type": "label",
+              "text": "Convert / Optimize Images",
+              "font": {
+                "size": "large",
+                "weight": "semibold"
+              }
+            },
+            {
+              "id": "summary_label",
+              "type": "label",
+              "text": "Loading selected files…",
+              "colour": "secondaryLabelColor"
+            },
+            {
+              "id": "warning_label",
+              "type": "label",
+              "text": "",
+              "colour": "systemOrangeColor",
+              "hidden": true
+            }
+          ]
+        },
+        {
+          "constraints": {
+            "region": "centre"
+          },
+          "id": "file_list",
+          "type": "dataview",
+          "placeholder": "No images selected",
+          "padding": 4,
+          "spacing": 4,
+          "cell": {
+            "height": 48,
+            "init": {
+              "row_box.background": null
+            },
+            "selected": {
+              "row_box.background": "alfredSelectedResultBackgroundColor"
+            },
+            "root": {
+              "id": "row_box",
+              "type": "view",
+              "layout": "inline",
+              "direction": "vertical",
+              "padding": 6,
+              "spacing": 2,
+              "components": [
+                {
+                  "id": "row_title",
+                  "type": "label",
+                  "font": {
+                    "weight": "medium"
+                  }
+                },
+                {
+                  "id": "row_detail",
+                  "type": "label",
+                  "colour": "secondaryLabelColor",
+                  "font": {
+                    "size": "small"
+                  }
+                }
+              ]
+            }
+          },
+          "data": {
+            "type": "basic",
+            "src": []
+          }
+        },
+        {
+          "constraints": {
+            "region": "bottom"
+          },
+          "type": "view",
+          "layout": "inline",
+          "direction": "vertical",
+          "spacing": 10,
+          "components": [
+            {
+              "type": "view",
+              "layout": "inline",
+              "direction": "horizontal",
+              "spacing": 10,
+              "components": [
+                {
+                  "type": "label",
+                  "text": "Format:"
+                },
+                {
+                  "id": "format_picker",
+                  "type": "picker",
+                  "focus": true,
+                  "items": [
+                    { "text": "WebP (.webp)", "value": "webp" },
+                    { "text": "JPEG (.jpg)", "value": "jpeg" },
+                    { "text": "PNG (.png)", "value": "png" },
+                    { "text": "AVIF (.avif)", "value": "avif" },
+                    { "text": "HEIC (.heic)", "value": "heic" },
+                    { "text": "TIFF (.tiff)", "value": "tiff" },
+                    { "text": "GIF (.gif)", "value": "gif" },
+                    { "type": "separator" },
+                    { "text": "Keep Original Format (Optimize)", "value": "optimize" }
+                  ],
+                  "events": [
+                    {
+                      "triggers": "changed",
+                      "action": {
+                        "type": "script",
+                        "src": "./scripts/bridge.sh",
+                        "flattenarrayargs": true,
+                        "args": [
+                          "format_changed",
+                          "{value:format_picker.selected.value}",
+                          "{value:quality_field.text}",
+                          "{value:lossless_check.checked}",
+                          "{value:exif_check.checked}",
+                          "{var:selected_files}"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "label",
+                  "text": "Quality:"
+                },
+                {
+                  "id": "quality_field",
+                  "type": "textfield",
+                  "text": "86",
+                  "placeholder": "1–100",
+                  "constraints": {
+                    "size": {
+                      "width": 54
+                    }
+                  },
+                  "events": [
+                    {
+                      "triggers": "typingstopped",
+                      "action": {
+                        "type": "script",
+                        "src": "./scripts/bridge.sh",
+                        "flattenarrayargs": true,
+                        "args": [
+                          "refresh",
+                          "{value:format_picker.selected.value}",
+                          "{value:quality_field.text}",
+                          "{value:lossless_check.checked}",
+                          "{value:exif_check.checked}",
+                          "{var:selected_files}"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "lossless_check",
+                  "type": "checkbox",
+                  "text": "Lossless",
+                  "checked": false,
+                  "events": [
+                    {
+                      "triggers": "changed",
+                      "action": {
+                        "type": "script",
+                        "src": "./scripts/bridge.sh",
+                        "flattenarrayargs": true,
+                        "args": [
+                          "refresh",
+                          "{value:format_picker.selected.value}",
+                          "{value:quality_field.text}",
+                          "{value:lossless_check.checked}",
+                          "{value:exif_check.checked}",
+                          "{var:selected_files}"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "exif_check",
+                  "type": "checkbox",
+                  "text": "Keep EXIF",
+                  "checked": true,
+                  "events": [
+                    {
+                      "triggers": "changed",
+                      "action": {
+                        "type": "script",
+                        "src": "./scripts/bridge.sh",
+                        "flattenarrayargs": true,
+                        "args": [
+                          "refresh",
+                          "{value:format_picker.selected.value}",
+                          "{value:quality_field.text}",
+                          "{value:lossless_check.checked}",
+                          "{value:exif_check.checked}",
+                          "{var:selected_files}"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "view",
+              "layout": "border",
+              "spacing": 8,
+              "components": [
+                {
+                  "constraints": {
+                    "region": "centre"
+                  },
+                  "type": "view",
+                  "layout": "inline",
+                  "direction": "horizontal",
+                  "spacing": 8,
+                  "components": [
+                    {
+                      "id": "run_progress",
+                      "type": "progress",
+                      "style": "round",
+                      "hidden": true
+                    },
+                    {
+                      "id": "status_label",
+                      "type": "label",
+                      "text": "Press ↩︎ to convert · ⌘P to measure actual output size",
+                      "colour": "secondaryLabelColor"
+                    }
+                  ]
+                },
+                {
+                  "constraints": {
+                    "region": "right"
+                  },
+                  "type": "view",
+                  "layout": "inline",
+                  "direction": "horizontal",
+                  "spacing": 8,
+                  "components": [
+                    {
+                      "id": "measure_btn",
+                      "type": "button",
+                      "text": "Measure Size (⌘P)",
+                      "events": [
+                        {
+                          "triggers": "actioned",
+                          "action": [
+                            {
+                              "type": "json",
+                              "src": {
+                                "update": {
+                                  "ids": {
+                                    "run_progress": { "hidden": false, "progress": 0.3 },
+                                    "status_label": { "text": "Measuring actual encoded size…", "colour": "secondaryLabelColor" }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "script",
+                              "src": "./scripts/bridge.sh",
+                              "async": true,
+                              "flattenarrayargs": true,
+                              "args": [
+                                "measure",
+                                "{value:format_picker.selected.value}",
+                                "{value:quality_field.text}",
+                                "{value:lossless_check.checked}",
+                                "{value:exif_check.checked}",
+                                "{var:selected_files}"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "convert_btn",
+                      "type": "button",
+                      "text": "Convert to WebP",
+                      "shortcut": "↩︎",
+                      "events": [
+                        {
+                          "triggers": "actioned",
+                          "action": [
+                            {
+                              "type": "json",
+                              "src": {
+                                "update": {
+                                  "ids": {
+                                    "run_progress": { "hidden": false, "progress": 0.3 },
+                                    "status_label": { "text": "Converting…", "colour": "secondaryLabelColor" }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "script",
+                              "src": "./scripts/bridge.sh",
+                              "async": true,
+                              "flattenarrayargs": true,
+                              "args": [
+                                "convert",
+                                "{value:format_picker.selected.value}",
+                                "{value:quality_field.text}",
+                                "{value:lossless_check.checked}",
+                                "{value:exif_check.checked}",
+                                "{var:selected_files}"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
