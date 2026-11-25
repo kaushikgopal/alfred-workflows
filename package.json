@@ -1,0 +1,12 @@
+{
+  "name": "alfred-workflows",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test */tests/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  }
+}
