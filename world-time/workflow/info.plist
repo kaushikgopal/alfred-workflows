@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>kau.sh.alfred.worldtime</string>
+	<key>category</key>
+	<string>Productivity</string>
+	<key>connections</key>
+	<dict>
+		<key>A1B2C3D4-1111-4111-8111-111111111111</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B2C3D4E5-2222-4222-8222-222222222222</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>kaush</string>
+	<key>description</key>
+	<string>Instant offline world clock and Raycast-style timezone converter. Zero dependencies.</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>World Time</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>{var:keyword}</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Looking up world time…</string>
+				<key>script</key>
+				<string></string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>./world_time.js</string>
+				<key>subtext</key>
+				<string>Try: now in chennai · now 5pm ldn in sf · now diff paris · now +4h in tokyo</string>
+				<key>title</key>
+				<string>World Time</string>
+				<key>type</key>
+				<integer>8</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>A1B2C3D4-1111-4111-8111-111111111111</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>B2C3D4E5-2222-4222-8222-222222222222</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>## World Time
+
+Instant offline world clock and Raycast-style timezone converter for Alfred. Runs natively on macOS JavaScript (JXA) with zero external installs.
+
+### Examples
+
+- `now` — Local time + your pinned locations
+- `now in chennai` / `now chennai` — Current time in Chennai
+- `now in india` / `now in beijing` / `now in jfk` / `now in ist` — Cities, countries, airports, states, and timezone codes
+- `now 5pm ldn in sf` / `now 14:30 tokyo to chennai` — Convert between any two places
+- `now 5pm in chennai` — Convert local time to Chennai
+- `now 5pm chennai` — Convert Chennai time to your local time
+- `now 5pm tomorrow in tokyo` / `now 9am 2026-07-01 ldn in sf` — Convert on a specific date
+- `now +2h30m` / `now in 4 hours in chennai` / `now tokyo + 4 hours` — Relative offsets
+- `now diff paris` / `now diff sf to chennai` — Time difference
+- `now 2026-03-15T14:30:00Z` / `now 1700000000 in chennai` — ISO 8601 and Unix timestamps
+
+### Actions
+
+- `↩` Copy time &amp; location summary
+- `⌘↩` Copy time only
+- `⌥↩` Copy ISO 8601 timestamp
+- `⌃↩` Copy Unix epoch timestamp
+- `⌘L` Show in Large Type</string>
+	<key>uidata</key>
+	<dict>
+		<key>A1B2C3D4-1111-4111-8111-111111111111</key>
+		<dict>
+			<key>xpos</key>
+			<real>120</real>
+			<key>ypos</key>
+			<real>140</real>
+		</dict>
+		<key>B2C3D4E5-2222-4222-8222-222222222222</key>
+		<dict>
+			<key>xpos</key>
+			<real>420</real>
+			<key>ypos</key>
+			<real>140</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>now</string>
+				<key>placeholder</key>
+				<string>now</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Keyword to trigger World Time in Alfred.</string>
+			<key>label</key>
+			<string>Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>San Francisco
+New York
+London
+India
+Tokyo
+UTC</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Locations shown when you type the keyword with no query (one per line or comma-separated). Accepts cities, countries, airports, or timezone codes.</string>
+			<key>label</key>
+			<string>Pinned Locations</string>
+			<key>type</key>
+			<string>textarea</string>
+			<key>variable</key>
+			<string>pinned_locations</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>12h</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>12-hour (3:45 PM)</string>
+						<string>12h</string>
+					</array>
+					<array>
+						<string>24-hour (15:45)</string>
+						<string>24h</string>
+					</array>
+					<array>
+						<string>12-hour with seconds (3:45:12 PM)</string>
+						<string>12h_sec</string>
+					</array>
+					<array>
+						<string>24-hour with seconds (15:45:12)</string>
+						<string>24h_sec</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Clock display format.</string>
+			<key>label</key>
+			<string>Time Format</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>time_format</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<true/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string>Keep live clocks ticking while Alfred is open</string>
+			</dict>
+			<key>description</key>
+			<string>Refreshes every 10s (or every 1s when showing seconds).</string>
+			<key>label</key>
+			<string>Live Refresh</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>live_refresh</string>
+		</dict>
+	</array>
+	<key>version</key>
+	<string>1.0.0</string>
+	<key>webaddress</key>
+	<string>https://github.com/kaushikgopal/alfred-workflows</string>
+</dict>
+</plist>
