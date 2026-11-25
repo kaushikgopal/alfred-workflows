@@ -34,5 +34,6 @@ Before committing workflow changes:
 
 ```fish
 plutil -lint <slug>/workflow/info.plist
-python3 -m unittest discover -s image-tools/tests -v
+npm run typecheck
+npm test
 ```

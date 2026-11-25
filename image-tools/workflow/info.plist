@@ -83,7 +83,8 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>exec /usr/bin/env python3 ./bin/optimize_action.py "$@"</string>
+				<string>export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+exec node ./bin/optimize_action.ts "$@"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>

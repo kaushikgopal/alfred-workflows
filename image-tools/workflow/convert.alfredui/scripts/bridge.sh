@@ -1,3 +1,4 @@
 #!/bin/sh
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-exec /usr/bin/env python3 "${SCRIPT_DIR}/../../bin/ui_bridge.py" "$@"
+exec node "${SCRIPT_DIR}/../../bin/ui_bridge.ts" "$@"

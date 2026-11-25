@@ -33,5 +33,5 @@ ln -s ~/dev/oss/alfred-workflows/image-tools/workflow \
 ## Run tests
 
 ```fish
-python3 -m unittest discover -s ~/dev/oss/alfred-workflows/image-tools/tests -v
+node --test ~/dev/oss/alfred-workflows/image-tools/tests/image_tools.test.ts
 ```
