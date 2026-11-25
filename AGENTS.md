@@ -5,7 +5,7 @@
 Modern workflows live under `<slug>/workflow/` so scripts, Alfred 6 UI JSON (`.alfredui/`), and `info.plist` stay diffable in git:
 
 - `image-tools/` — Optimize Image and Convert Image Universal Actions (`tests/` holds disposable-fixture tests)
-- `text-transformer/` — Alfred Team's Text Transformer with custom `Unwrap`, `Strip Line Prefixes`, and `Strip Line Starts` additions
+- `text-transformer/` — Alfred Team's Text Transformer with custom `Unwrap` and `Strip Clean` additions
 - `emoji-search/` — Customized Emoji Search with curated symbols and generated Unicode entries (see `emoji-search/AGENTS.md`)
 - `pseudo-xml-surround/` — Prompt for XML-like tags and paste a surrounded block
 - `xdg-base-directories/` — Snippet/list picker for XDG variable names

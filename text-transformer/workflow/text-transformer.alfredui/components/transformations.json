@@ -60,12 +60,8 @@
         "function": "unwrap"
       },
       {
-        "title.text": "Strip Line Prefixes",
-        "function": "stripLinePrefixes"
-      },
-      {
-        "title.text": "Strip Line Starts",
-        "function": "stripLineStarts"
+        "title.text": "Strip Clean",
+        "function": "stripClean"
       },
       {
         "title.text": "Sort Lines",

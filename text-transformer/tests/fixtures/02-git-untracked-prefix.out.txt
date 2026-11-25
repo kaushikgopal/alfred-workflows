@@ -1,0 +1,4 @@
+"Emoji Search.alfredworkflow"
+"Image Tools (Optimize & Convert).alfredworkflow"
+"Pseudo XML surround snippet.alfredworkflow"
+"XDG Base Directories.alfredworkflow"

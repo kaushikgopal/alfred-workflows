@@ -3,8 +3,7 @@
 Maintained source for Alfred Team's **Text Transformer** (`com.alfredapp.vitor.texttransformer`) with local Universal Action transformations added:
 
 - **Unwrap** (`unwrap`)
-- **Strip Line Prefixes** (`stripLinePrefixes`)
-- **Strip Line Starts** (`stripLineStarts`)
+- **Strip Clean** (`stripClean`)
 
 ## Key files
 

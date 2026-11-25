@@ -1,5 +1,91 @@
 #!/usr/bin/osascript -l JavaScript
 
+const GUTTER_RE = /^[^\S\r\n]*([|>│┃┆┇┊┋║▏▎▍▌▋▊▉])([^\S\r\n]*)(.*)$/
+const SYMBOL_PREFIX_RE = /^[^\S\r\n]*([^\s\p{L}\p{N}]{1,3})(?:([^\S\r\n]+)(.*)|)$/u
+const PRESERVED_BULLETS = new Set(['-', '*', '+'])
+const LINE_MARKER_RE = /^[^\S\r\n]*(?:#|\/\/|--|[0-9]+[.)])[^\S\r\n]+/
+
+function splitLines(text) {
+  const parts = text.split(/(\r\n|[\r\n\u2028])/)
+  const lines = []
+  const eols = []
+  for (let i = 0; i < parts.length; i += 2) {
+    lines.push(parts[i])
+    eols.push(parts[i + 1] || '')
+  }
+  return { lines, eols }
+}
+
+function joinLines(lines, eols) {
+  let out = ''
+  for (let i = 0; i < lines.length; i++) out += lines[i] + eols[i]
+  return out
+}
+
+function stripMatchedPadding(lines, matches) {
+  let commonPad = Infinity
+  for (let i = 0; i < matches.length; i++) {
+    const m = matches[i]
+    if (m && m.rest.length > 0 && m.ws.length < commonPad) {
+      commonPad = m.ws.length
+    }
+  }
+  if (commonPad === Infinity) commonPad = 0
+
+  return lines.map((line, i) => {
+    const m = matches[i]
+    if (!m) {
+      return i === 0 ? line.replace(/^[^\S\r\n]+/, '') : line
+    }
+    if (m.rest.length === 0) return ''
+    return m.ws.slice(commonPad) + m.rest
+  })
+}
+
+function stripGutterLines(lines) {
+  let matchedCount = 0
+  const matches = lines.map((line) => {
+    const m = line.match(GUTTER_RE)
+    if (!m) return null
+    matchedCount++
+    return { ws: m[2], rest: m[3] }
+  })
+  if (matchedCount === 0) return null
+  return stripMatchedPadding(lines, matches)
+}
+
+function stripRepeatedSymbolPrefix(lines) {
+  const counts = new Map()
+  let nonEmptyCount = 0
+  const parsed = lines.map((line) => {
+    if (line.trim().length > 0) nonEmptyCount++
+    const m = line.match(SYMBOL_PREFIX_RE)
+    if (!m) return null
+    const token = m[1]
+    if (PRESERVED_BULLETS.has(token)) return null
+    counts.set(token, (counts.get(token) || 0) + 1)
+    return { token, ws: m[2] || '', rest: m[3] || '' }
+  })
+
+  let bestToken = null
+  let bestCount = 0
+  for (const [token, count] of counts.entries()) {
+    if (count > bestCount) {
+      bestToken = token
+      bestCount = count
+    }
+  }
+
+  if (!bestToken || bestCount < 2 || bestCount * 2 < nonEmptyCount) return null
+
+  const matches = parsed.map((p) => (p && p.token === bestToken ? p : null))
+  return stripMatchedPadding(lines, matches)
+}
+
+function stripLineMarkers(lines) {
+  return lines.map((line) => line.replace(LINE_MARKER_RE, ''))
+}
+
 class Transformer {
   constructor(text) {
     this.text = text
@@ -64,12 +150,13 @@ class Transformer {
     return this.text.replace(/(\S)[^\S\r\n\u2028\u2029]*(?:\r\n|[\r\n\u2028])[^\S\r\n\u2028\u2029]*(?=\S)/g, '$1 ')
   }
 
-  get stripLinePrefixes() {
-    return this.text.replace(/^[^\S\r\n\u2028\u2029]*[|>] ?/gm, '')
-  }
-
-  get stripLineStarts() {
-    return this.text.replace(/^[^\S\r\n\u2028\u2029]*(?:[*+\-#]|\/\/|--|[0-9]+[.)])[^\S\r\n\u2028\u2029]+/gm, '')
+  get stripClean() {
+    const { lines, eols } = splitLines(this.text)
+    const cleaned =
+      stripGutterLines(lines) ||
+      stripRepeatedSymbolPrefix(lines) ||
+      stripLineMarkers(lines)
+    return joinLines(cleaned, eols)
   }
 
   get sort() {
@@ -288,8 +375,7 @@ function run(argv) {
 
     if (typeof textOutput !== "string") throw Error("Failed to generate textual output")
 
-    // Strip Line Starts preserves trailing whitespace and blank lines.
-    const output = transformationName === "stripLineStarts" ? textOutput : textOutput.trimEnd()
+    const output = textOutput.trimEnd()
 
     return JSON.stringify({ update: { ids: {
       ...(rewriteInput && { textInput: { text: textInput } }),

@@ -1,0 +1,9 @@
+i want to build an alfred workflow that's similar to how raycast is able to handle timezones. alfred has a workflow https://alfred.app/workflows/fedecalendino/world-clock/
+that's popular but that gets me 80% of the way.
+
+i want to be able to say "now in chennai" "now in india" "now in beijing" etc. and be able to display the time in realtime in those locations.
+i think the world clock extension requires you to pre-defined those timezones in the world, i'd like something that's smarter and does this lookup.
+
+- how does raycast do it?
+- does world clock allow us to do this already?
+- can we modify world clock to add this feature
