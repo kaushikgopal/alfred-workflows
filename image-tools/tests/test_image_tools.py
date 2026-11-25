@@ -124,7 +124,7 @@ class TestImageTools(unittest.TestCase):
     def test_workflow_plist_and_ui_json_valid(self) -> None:
         with open(os.path.join(WORKFLOW_DIR, "info.plist"), "rb") as f:
             plist = plistlib.load(f)
-        self.assertEqual(plist["bundleid"], "com.kaushikgopal.alfred.imagetools")
+        self.assertEqual(plist["bundleid"], "kau.sh.alfred.imagetools")
         types = {o["type"] for o in plist["objects"]}
         self.assertIn("alfred.workflow.trigger.action", types)
         self.assertIn("alfred.workflow.userinterface.alfredui", types)
