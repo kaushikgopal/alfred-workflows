@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
@@ -324,3 +325,18 @@ def execute_item(
             output_bytes=out_bytes,
             message=f"{format_bytes(in_bytes)} → {format_bytes(out_bytes)} ({delta})",
         )
+
+
+def execute_batch(
+    plans: List[PlannedItem],
+    config: OperationConfig,
+    tools: AvailableTools,
+    dry_run_measure: bool = False,
+    max_workers: Optional[int] = None,
+) -> List[ExecutionResult]:
+    """Execute or measure a batch of planned items in parallel while preserving input order."""
+    if len(plans) <= 1:
+        return [execute_item(p, config, tools, dry_run_measure=dry_run_measure) for p in plans]
+    workers = max_workers or min(len(plans), os.cpu_count() or 4, 8)
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        return list(pool.map(lambda p: execute_item(p, config, tools, dry_run_measure=dry_run_measure), plans))

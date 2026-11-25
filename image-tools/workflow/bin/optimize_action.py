@@ -11,9 +11,9 @@ WORKFLOW_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if WORKFLOW_DIR not in sys.path:
     sys.path.insert(0, WORKFLOW_DIR)
 
-from lib.engine import execute_item
+from lib.engine import execute_batch
 from lib.planner import OperationConfig, format_bytes, format_delta, plan_batch
-from lib.probe import probe_image
+from lib.probe import probe_images
 from lib.tools import detect_tools
 
 
@@ -37,7 +37,7 @@ def main(argv: list[str]) -> int:
         return 0
 
     tools = detect_tools()
-    images = [probe_image(p, tools) for p in paths]
+    images = probe_images(paths, tools)
     config = OperationConfig(
         mode="optimize",
         target_format="optimize",
@@ -47,7 +47,7 @@ def main(argv: list[str]) -> int:
         skip_if_larger=True,
     )
     plans = plan_batch(images, config, tools)
-    results = [execute_item(plan, config, tools, dry_run_measure=False) for plan in plans]
+    results = execute_batch(plans, config, tools, dry_run_measure=False)
 
     ok_items = [r for r in results if r.status == "ok"]
     skipped_items = [r for r in results if r.status == "skipped"]

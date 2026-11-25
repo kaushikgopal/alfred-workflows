@@ -5,8 +5,9 @@ from __future__ import annotations
 import os
 import struct
 import subprocess
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from typing import Optional
+from typing import List, Optional
 
 from .tools import AvailableTools
 
@@ -245,3 +246,12 @@ def probe_image(path: str, tools: AvailableTools) -> ImageInfo:
         is_animated=is_animated,
         icc_profile=icc_profile,
     )
+
+
+def probe_images(paths: List[str], tools: AvailableTools, max_workers: Optional[int] = None) -> List[ImageInfo]:
+    """Probe multiple image files in parallel while preserving input order."""
+    if len(paths) <= 1:
+        return [probe_image(p, tools) for p in paths]
+    workers = max_workers or min(len(paths), os.cpu_count() or 4, 8)
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        return list(pool.map(lambda p: probe_image(p, tools), paths))

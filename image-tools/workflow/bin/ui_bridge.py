@@ -12,7 +12,7 @@ WORKFLOW_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if WORKFLOW_DIR not in sys.path:
     sys.path.insert(0, WORKFLOW_DIR)
 
-from lib.engine import ExecutionResult, execute_item
+from lib.engine import ExecutionResult, execute_batch
 from lib.planner import (
     ALWAYS_LOSSLESS,
     DEFAULT_QUALITY,
@@ -24,7 +24,7 @@ from lib.planner import (
     format_delta,
     plan_batch,
 )
-from lib.probe import probe_image
+from lib.probe import probe_images
 from lib.tools import detect_tools
 
 
@@ -184,7 +184,7 @@ def build_response(
 ) -> Dict[str, Any]:
     files = parse_file_args(file_args)
     tools = detect_tools()
-    images = [probe_image(p, tools) for p in files]
+    images = probe_images(files, tools)
 
     lossless = parse_bool(lossless_raw, default=False)
     keep_exif = parse_bool(keep_exif_raw, default=True)
@@ -241,9 +241,7 @@ def build_response(
         }
 
     if action == "measure":
-        results: List[ExecutionResult] = [
-            execute_item(p, config, tools, dry_run_measure=True) for p in plans
-        ]
+        results: List[ExecutionResult] = execute_batch(plans, config, tools, dry_run_measure=True)
         rows = []
         measured_in = 0
         measured_out = 0
@@ -269,9 +267,7 @@ def build_response(
         return {"update": {"relayout": True, "ids": ids_update}}
 
     if action == "convert":
-        results = [
-            execute_item(p, config, tools, dry_run_measure=False) for p in plans
-        ]
+        results = execute_batch(plans, config, tools, dry_run_measure=False)
         rows = []
         ok_count = 0
         skip_count = 0
